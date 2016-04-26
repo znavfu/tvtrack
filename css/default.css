@@ -1,0 +1,86 @@
+body {
+	font-family: 'BebasNeue';
+	background-color: #f8fadf;
+}
+input {
+	font-family: 'BebasNeue'!important;
+}
+.sidebar {
+	position: fixed;
+	left: 0; height: 100%; top: 0; width: 60px;
+	background-color: #00a896;
+	box-shadow: 0 0 10px #999;
+}
+.sidebar>.pagelink {
+	width: 60px;
+	text-align: center;
+	padding: 20px 0;
+	font-size: 20px;
+	color: #f8fadf;
+	cursor: pointer;
+}
+.sidebar>.pagelink:hover {
+	background-color: rgba(0,0,0,0.1);
+}
+
+.pages {
+	position: fixed;
+	right: -10px; top: 0; left: 60px; height: 100%;
+	overflow: hidden;
+	overflow-y: scroll;
+}
+
+.page {
+	position: absolute;
+	width: 0;
+	overflow: hidden;
+}
+
+
+
+
+
+.locallist-show {
+	font-size: 20px;
+	color: #222;
+}
+.locallist-show-title {
+	padding: 20px 20px 10 20px;
+	font-size: 22px;
+	cursor: pointer;
+	font-weight: 400;
+}
+.locallist-show-title:hover {
+	background-color: rgba(0,0,0,0.1);
+}
+.locallist-show-episodes {
+	font-size: 18px;
+	font-weight: 100;
+	padding: 0 20px 10px 30px;
+}
+.locallist-show-episode {
+	padding: 2px 0;
+}
+
+
+.settings {
+	padding: 50px;
+}
+.torrentfolder {
+	font-size: 30px;
+}
+.torrentfolder div {
+	margin-bottom: 10px!important;	
+}
+
+
+
+@font-face {
+	font-family: "NovaMono";
+	src: url(../fonts/novamono.ttf);
+}
+
+@font-face {
+	font-family: "BebasNeue";
+	src: url(../fonts/BebasNeue.otf);
+}

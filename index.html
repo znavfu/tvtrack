@@ -1,0 +1,63 @@
+<html>
+
+<head>
+    <title>TV Track</title>
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/default.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <!--i class="fa fa-cloud-download pagelink pagelink-torrents"></i-->
+        <i class="fa fa-bars pagelink pagelink-list" data-page="locallist"></i>
+        <!--i class="fa fa-plus pagelink pagelink-add"></i-->
+        <i class="fa fa-cog pagelink pagelink-settings" data-page="settings"></i>
+    </div>
+    <div class="pages">
+        <div class="page locallist">
+        </div>
+        <div class="page settings">
+            <div class="torrentfolder">
+                <div>Torrent Folder</div>
+                <div><input id="torrentfolderinput" type="file" nwdirectory /></div>
+            </div>
+        </div>
+    </div>
+    
+    <script id="locallist-template" type="text/x-handlebars-template">
+        {{#each .}}
+        <div class="locallist-show">
+            <div class="locallist-show-title">
+                {{@key}}
+            </div>
+            <div class="locallist-show-episodes">
+                {{#each .}}
+                <div class="locallist-show-episode">
+                    {{this}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="js/default.js"></script>
+    <script type="text/javascript" src="js/internet.js"></script>
+    <script type="text/javascript" src="js/local.js"></script>
+    
+    <script>
+    var chokidar = require('chokidar');
+    var watcher = chokidar.watch('.', {
+        persistent: true,
+        depth: 1
+    });
+
+    watcher.on('change', function(path, stats) {
+        if(location)
+            location.reload();
+    });
+    </script>
+</body>
+
+</html>

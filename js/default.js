@@ -1,0 +1,78 @@
+var request = require('request');
+var querystring = require('querystring');
+var eztv = require('eztv');
+var cheerio = require('cheerio');
+var fs = require('fs');
+var levenshtein = require('levenshtein');
+var Handlebars = require('handlebars');
+
+var showlist = [];
+var myshows = {};
+var torrentfolder = 'F:/Torrent';
+
+var getSimilarity = function(str1, str2) {
+    var l = new levenshtein(str1, str2);
+    return (1 - (l.distance / Math.max(str1.length, str2.length))) * 100;
+};
+
+function titleCase(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+        splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+}
+
+var internet = {
+    cookieJar: undefined,
+    makeRequest: function(url, formdata, callback) {
+        request.get({
+                url: url,
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                jar: internet.cookieJar,
+                body: querystring.stringify(formdata)
+            },
+            function(error, response, data) {
+                if (error)
+                    console.log(error);
+                callback(data);
+            });
+    },
+};
+
+var pages = {
+    goToPage: function(page) {
+        $('.page').not('.'+page).animate({opacity: 0}, 200, function() {
+            $('.page').not('.'+page).css({width: '0', top: '100%'});
+        });
+        $('.'+page).css({width: '100%', top: 0});
+        $('.'+page).animate({opacity: 1}, 200, function() {
+            
+        });
+    }
+};
+
+$(document).ready(function() {
+    pages.goToPage('settings');
+});
+
+$(document).on('click', '.locallist-show-title', function(e) {
+    var elements = $(this).parent().children('.locallist-show-episodes').children("div").length;
+    $(this).parent().children('.locallist-show-episodes').stop();
+    elements = Math.max(elements,4);
+    elements = Math.min(elements,10);
+    $(this).parent().children('.locallist-show-episodes').slideToggle(50*elements);
+});
+
+$(document).on('click', '.pagelink', function(e) {
+    var page = $(this).attr('data-page');
+    pages.goToPage(page);
+});
+
+$(document).on('change','#torrentfolderinput', function(e) {
+    torrentfolder = $(this).val();
+    getMyShows();
+});
