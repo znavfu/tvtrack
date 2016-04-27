@@ -15,10 +15,17 @@
     </div>
     <div class="pages">
         <div class="page locallist">
+            <div class="panel">
+                
+            </div
+            ><div class="panel">
+                
+            </div>
         </div>
         <div class="page settings">
-            <div class="torrentfolder">
-                <div>Torrent Folder</div>
+            <div class="watchedfolders">
+                <div>Torrent Folders</div>
+                <div class="torrentfolders"></div>
                 <div><input id="torrentfolderinput" type="file" nwdirectory /></div>
             </div>
         </div>
@@ -29,22 +36,40 @@
         <div class="locallist-show">
             <div class="locallist-show-title">
                 {{@key}}
+                <span class="fromfolder">
+                    {{torrentfolder}}
+                </span>
             </div>
             <div class="locallist-show-episodes">
-                {{#each .}}
-                <div class="locallist-show-episode">
-                    {{this}}
+                {{#each torrents}}
+                <div class="locallist-show-episode" data-path="{{path}}">
+                    {{name}}
                 </div>
                 {{/each}}
             </div>
         </div>
         {{/each}}
     </script>
+
+    <script id="torrentfolder-template" type="text/x-handlebars-template">
+        {{#each .}}
+        <div class="torrentfolder">
+            <span class="torrentfolder-path" data-path="{{path}}">
+                {{path}}
+            </span>
+            <span>
+                <i class="fa fa-times removetorrentfolder"></i>
+            </span>
+        </div>
+        {{/each}}
+    </script>
     
     <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="js/database.js"></script>
     <script type="text/javascript" src="js/default.js"></script>
     <script type="text/javascript" src="js/internet.js"></script>
     <script type="text/javascript" src="js/local.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
     
     <script>
     var chokidar = require('chokidar');

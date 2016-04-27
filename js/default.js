@@ -8,7 +8,7 @@ var Handlebars = require('handlebars');
 
 var showlist = [];
 var myshows = {};
-var torrentfolder = 'F:/Torrent';
+var torrentfolder = '';
 
 var getSimilarity = function(str1, str2) {
     var l = new levenshtein(str1, str2);
@@ -56,7 +56,7 @@ var pages = {
 };
 
 $(document).ready(function() {
-    pages.goToPage('settings');
+    pages.goToPage('locallist');
 });
 
 $(document).on('click', '.locallist-show-title', function(e) {
@@ -70,9 +70,7 @@ $(document).on('click', '.locallist-show-title', function(e) {
 $(document).on('click', '.pagelink', function(e) {
     var page = $(this).attr('data-page');
     pages.goToPage(page);
-});
-
-$(document).on('change','#torrentfolderinput', function(e) {
-    torrentfolder = $(this).val();
-    getMyShows();
+    if(page==="locallist") {
+        getMyShows();
+    }
 });
