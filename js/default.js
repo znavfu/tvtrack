@@ -5,9 +5,11 @@ var cheerio = require('cheerio');
 var fs = require('fs');
 var levenshtein = require('levenshtein');
 var Handlebars = require('handlebars');
+var he = require('he');
 
 var showlist = [];
 var myshows = {};
+var availabletorrents = {};
 var torrentfolder = '';
 
 var getSimilarity = function(str1, str2) {
@@ -56,7 +58,8 @@ var pages = {
 };
 
 $(document).ready(function() {
-    pages.goToPage('locallist');
+    pages.goToPage('availabletorrents');
+    getMyShows();
 });
 
 $(document).on('click', '.locallist-show-title', function(e) {
@@ -67,10 +70,32 @@ $(document).on('click', '.locallist-show-title', function(e) {
     $(this).parent().children('.locallist-show-episodes').slideToggle(50*elements);
 });
 
+$(document).on('click', '.availabletorrents-show-title', function(e) {
+    var elements = $(this).parent().children('.availabletorrents-show-episodes').children("div").length;
+    $(this).parent().children('.availabletorrents-show-episodes').stop();
+    elements = Math.max(elements,4);
+    elements = Math.min(elements,10);
+    $(this).parent().children('.availabletorrents-show-episodes').slideToggle(50*elements);
+});
+
 $(document).on('click', '.pagelink', function(e) {
     var page = $(this).attr('data-page');
     pages.goToPage(page);
-    if(page==="locallist") {
+    if(page==="locallist" || page==="availabletorrents") {
         getMyShows();
     }
 });
+
+var getEpisodeDetailsFromName = function(name) {
+    var showregex = /[Ss]{1}[0-9]{2}[Ee]{1}[0-9]{2}/ig;
+    var match = showregex.exec(name);
+    var obj = {
+        season: 0,
+        episode: 0
+    };
+    if(match!==null) {
+        obj.season = parseInt(match[0].substr(1,2));
+        obj.episode = parseInt(match[0].substr(4,2));
+    }
+    return obj;
+};

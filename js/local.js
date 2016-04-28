@@ -30,8 +30,8 @@ var getMyShows = function() {
             if (parts[parts.length - 1] === "")
                 parts.pop();
             show = parts.join(" ");
-            show = titleCase(show);
-            var name = filepath.substr(0, match.index+match[0].length);
+            show = titleCase(show).trim();
+            var name = filepath.substr(0, match.index+match[0].length).trim();
             return {
                 name: name,
                 show: show
@@ -41,6 +41,7 @@ var getMyShows = function() {
         }
     };
 
+    var callbackcount = 0;
     var readTorrentFolderCallback = function(torrentfolder) {
         return function(err, files) {
             if (err) {
@@ -63,14 +64,19 @@ var getMyShows = function() {
                         });
                     }
                 }
+                callbackcount--;
+                if(callbackcount===0)
+                    findMyShows();
                 loadLocalShows();
             }
         };
     };
 
     database.getTorrentFolders(function(data) {
+        //console.log(data);
+        callbackcount = data.length;
         for (var item in data) {
-            var torrentfolder = data[item].path;
+            var torrentfolder = data[item].path.trim();
             fs.readdir(torrentfolder, readTorrentFolderCallback(torrentfolder));
         }
     });

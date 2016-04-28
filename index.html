@@ -8,12 +8,20 @@
 
 <body>
     <div class="sidebar">
-        <!--i class="fa fa-cloud-download pagelink pagelink-torrents"></i-->
+        <i class="fa fa-cloud-download pagelink pagelink-torrents" data-page="availabletorrents"></i>
         <i class="fa fa-bars pagelink pagelink-list" data-page="locallist"></i>
         <!--i class="fa fa-plus pagelink pagelink-add"></i-->
         <i class="fa fa-cog pagelink pagelink-settings" data-page="settings"></i>
     </div>
     <div class="pages">
+        <div class="page availabletorrents">
+            <div class="panel">
+                
+            </div
+            ><div class="panel">
+                
+            </div>
+        </div>
         <div class="page locallist">
             <div class="panel">
                 
@@ -44,6 +52,34 @@
                 {{#each torrents}}
                 <div class="locallist-show-episode" data-path="{{path}}">
                     {{name}}
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <script id="availabletorrents-template" type="text/x-handlebars-template">
+        {{#each .}}
+        <div class="availabletorrents-show">
+            <div class="availabletorrents-show-title">
+                {{@key}}
+                <span class="fromfolder">
+                    {{torrents.length}}
+                </span>
+            </div>
+            <div class="availabletorrents-show-episodes">
+                {{#each torrents}}
+                <div class="availabletorrents-show-episode" data-path="{{path}}">
+                    <span>
+                        Season {{season}} Episode {{episode}}
+                    </span>
+                    <a href="{{magnet}}" class="magnet">
+                        <i class="fa fa-magnet"></i>
+                    </a>
+                    <a href="{{magnet720p}}" class="magnet720p">
+                        720p
+                    </a>
                 </div>
                 {{/each}}
             </div>
