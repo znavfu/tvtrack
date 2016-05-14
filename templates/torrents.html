@@ -1,0 +1,25 @@
+{{#each .}}
+<div class="torrents-show">
+    <div class="torrents-show-title">
+        {{@key}}
+        <span class="torrentscount">
+                    {{torrents.length}}
+                </span>
+    </div>
+    <div class="torrents-show-episodes">
+        {{#each torrents}}
+        <div class="torrents-show-episode" data-path="{{path}}">
+            <span>
+                        Season {{season}} Episode {{episode}}
+                    </span>
+            <a href="{{magnet}}" class="magnet">
+                <i class="fa fa-magnet"></i>
+            </a>
+            <a href="{{magnet720p}}" class="magnet720p">
+                        720p
+                    </a>
+        </div>
+        {{/each}}
+    </div>
+</div>
+{{/each}}

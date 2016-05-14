@@ -1,18 +1,23 @@
-var loadAllTorrentFolders = function() {
-    database.getTorrentFolders(function(data) {
-        var source = $("#torrentfolder-template").html();
-        var template = Handlebars.compile(source);
-        var wrapper = data;
-        var torrentfoldershtml = template(wrapper);
-        $('.torrentfolders').html(torrentfoldershtml);
-    });
+var settings = {
+    torrentfolders: {
+        load: function() {
+            database.local.folders.get(function(data) {
+                template.construct("torrentfolder", data, function(html) {
+                    $('.torrentfolders').html(html);
+                });
+            });
+        }
+    }
 };
-loadAllTorrentFolders();
+var loadAllTorrentFolders = function() {
+
+};
+settings.torrentfolders.load();
 
 $(document).on('change', '#torrentfolderinput', function(e) {
     torrentfolder = $(this).val().trim();
-    database.addTorrentFolder({ path: torrentfolder }, function() {
-        loadAllTorrentFolders();
+    database.local.folders.add({ path: torrentfolder }, function() {
+        settings.torrentfolders.load();
     });
 });
 
@@ -21,7 +26,7 @@ $(document).on('click', '.removetorrentfolder', function(e) {
     var folder = {
         path: path
     };
-    database.removeTorrentFolder(folder, function() {
-        loadAllTorrentFolders();
+    database.local.folders.remove(folder, function() {
+        settings.torrentfolders.load();
     });
 });

@@ -1,152 +1,241 @@
 body {
-	font-family: 'BebasNeue';
-	background-color: #f8fadf;
+    font-family: 'BebasNeue';
+    overflow: hidden;
 }
-input {
-	font-family: 'BebasNeue'!important;
+::-webkit-scrollbar { 
+    display: none; 
 }
-.sidebar {
-	position: fixed;
-	left: 0; height: 100%; top: 0; width: 60px;
-	background-color: #00a896;
-	box-shadow: 0 0 10px #999;
+.pushright {
+	float: right;
 }
-.sidebar>.pagelink {
-	width: 60px;
-	text-align: center;
-	padding: 20px 0;
-	font-size: 20px;
-	color: #f8fadf;
-	cursor: pointer;
-}
-.sidebar>.pagelink:hover {
-	background-color: rgba(0,0,0,0.1);
+.background {
+	position: absolute;
+	background-image: url(../assets/dark_embroidery.png);
+	top: 0%; left: 0%; width: 100%; height: 100%;
 }
 
+input {
+    font-family: 'BebasNeue';
+}
+
+.topbar {
+    position: fixed;
+    left: 0;
+    height: 60px;
+    top: 0;
+    right: 0;
+    padding: 0 30px;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.3);
+}
+
+.topbar>.pagelink {
+    text-align: center;
+    padding: 19px;
+    font-size: 20px;
+    color: #f8fadf;
+    cursor: pointer;
+}
+.topbar>.selected {
+	border-bottom: 2px solid rgb(255, 255, 255);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+/*.topbar>.pagelink:hover {
+	color: #333;
+    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.6);
+}*/
+
 .pages {
-	position: fixed;
-	right: -10px; top: 0; left: 60px; height: 100%;
-	overflow: hidden;
-	overflow-y: scroll;
+    position: fixed;
+    right: -15px;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    color: #fff;
 }
 
 .page {
-	position: absolute;
-	width: 0;
-	opacity: 0;
-	top: 100%;
-	overflow: hidden;
+    position: absolute;
+    width: 0;
+    opacity: 0;
+    top: 100%;
+    width: 100%;
+    bottom: 0;
+    padding: 20px 50px;
 }
 
-
-
-.locallist .panel {
-	width: 50%;
+.local>div {
 	display: inline-block;
+	width: 35%;
 	vertical-align: top;
 }
 
-.locallist-show {
-	font-size: 20px;
-	color: #222;
-}
-.locallist-show-title {
-	padding: 20px 20px 10 20px;
-	font-size: 22px;
-	cursor: pointer;
-	font-weight: 400;
-}
-.fromfolder {
-	color: #999;
-	font-size: 16px;
-	vertical-align: middle;
-	margin-left: 10px;
-}
-.locallist-show-title:hover {
-	background-color: #fff;
-	background-color: rgba(0,0,0,0.05);
-}
-.locallist-show-episodes {
-	font-size: 18px;
-	font-weight: 100;
-	padding: 0 20px 10px 30px;
-}
-.locallist-show-episode {
-	padding: 5px;
-	cursor: pointer;
-}
-.locallist-show-episode:hover {
-	background-color: #fff;
-	background-color: rgba(0,0,0,0.05);
+.local .showlist {
+	height: 100%;
+    overflow-y: scroll;
 }
 
-.availabletorrents .panel {
-	width: 50%;
-	display: inline-block;
-	vertical-align: top;
+.local-show {
+    font-size: 20px;
 }
 
-.availabletorrents-show {
-	font-size: 20px;
-	color: #222;
-}
-.availabletorrents-show-title {
-	padding: 20px 20px 10 20px;
-	font-size: 22px;
-	cursor: pointer;
-	font-weight: 400;
-}
-.availabletorrents-show-title:hover {
-	background-color: #fff;
-	background-color: rgba(0,0,0,0.05);
-}
-.availabletorrents-show-episodes {
-	font-size: 18px;
-	font-weight: 100;
-	padding: 0 20px 10px 30px;
-}
-.availabletorrents-show-episode {
-	padding: 5px;
-}
-.availabletorrents-show-episode:hover {
-	background-color: #fff;
-	background-color: rgba(0,0,0,0.05);
+.local-show-title {
+	margin-bottom: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 400;
 }
 
-.magnet,.magnet720p {
-	text-decoration: none;
+.local-show-title:hover {
+	background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.local-show-episodes {
+    display: none;
+}
+
+.local>.episodes {
+	width: 10%;
+	margin-bottom: 20px;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 400;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.local>.episodes>.local-episode {
+	margin-bottom: 10px;
+}
+
+.local-show-episode:hover {
+    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.torrents {
+	overflow-y: scroll;    
+}
+
+.torrents-show {
+    font-size: 20px;
+    display: inline-block;
+    width: 49%;
+    vertical-align: top;
+}
+
+.torrents-show-title {
+    padding: 20px 0 10px;
+    font-size: 22px;
+    cursor: pointer;
+    font-weight: 400;
+}
+
+.torrentscount {
 	color: #333;
+    background-color: #fff;
 	margin-left: 10px;
-	cursor: pointer;
+	width: 20px;
+	font-size: 17px;
+	padding: 2px 0;
+	text-align: center;
+	display: inline-block;
+	vertical-align: middle;
 }
 
-
-.settings {
-	padding: 50px;
+.torrents-show-title:hover {
+    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.05);
 }
+
+.torrents-show-episodes {
+    font-size: 18px;
+    font-weight: 100;
+    padding: 0 10px 10px 30px;
+}
+
+.torrents-show-episode {
+    padding: 5px;
+}
+
+.torrents-show-episode:hover {
+    background-color: #fff;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.magnet,
+.magnet720p {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 0 0 20px;
+    cursor: pointer;
+}
+
 .watchedfolders {
-	font-size: 30px;
+    font-size: 30px;
 }
+
 .watchedfolders div {
-	margin-bottom: 10px;	
+    margin-bottom: 10px;
 }
 
 .torrentfolder {
-	font-size: 20px;
+    font-size: 20px;
 }
 
 .torrentfolder .fa-times {
-	color: #999;
-	margin-left: 10px;
+    color: #999;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.favourites {
+	font-size: 22px;
+	overflow-y: scroll;
+    width: 88%;
+}
+
+.favourites .favourite {
+	margin: 4px 1px 0 0;
+    padding: 5px;
+    color: #000;
+    background-color: #fff;
+    display: inline-block;
+}
+
+.favourites .favouriterecommended {
+    margin-top: 30px;
+}
+
+.favourites .favouriterecommend {
+    margin: 4px 1px 0 0;
+    padding: 5px;
+    color: #000;
+    background-color: rgba(255,255,255,0.6);
+    display: inline-block;
+}
+
+.removefavourite {
 	cursor: pointer;
+	margin-left: 10px;
+    padding: 5px;
+}
+.addfavourite {
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 5px;
 }
 
 @font-face {
-	font-family: "NovaMono";
-	src: url(../fonts/novamono.ttf);
+    font-family: "NovaMono";
+    src: url(../fonts/novamono.ttf);
 }
 
 @font-face {
-	font-family: "BebasNeue";
-	src: url(../fonts/BebasNeue.otf);
+    font-family: "BebasNeue";
+    src: url(../fonts/BebasNeue.otf);
 }

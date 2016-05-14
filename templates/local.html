@@ -1,0 +1,14 @@
+{{#each .}}
+<div class="local-show">
+    <div class="local-show-title">
+        {{@key}}
+    </div>
+    <div class="local-show-episodes">
+        {{#each torrents}}
+        <div class="local-episode" data-path="{{path}}">
+            {{name}}
+        </div>
+        {{/each}}
+    </div>
+</div>
+{{/each}}

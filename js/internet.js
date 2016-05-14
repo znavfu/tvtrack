@@ -1,22 +1,176 @@
-var getShows = function() {
-    internet.makeRequest("https://eztv.ag/search/zxy", {}, function(data) {
-        var $ = cheerio.load(data);
+var torrents = {
+    unwatched: {},
+    display: function() {
+        template.construct("torrents", torrents.unwatched, function(html) {
+            $('.torrents').html(html);
+        });
+    },
+    find: function() {
+        var isnewshow = function(cur, last) {
+            if (cur.season > last.season)
+                return true;
+            if (cur.season == last.season)
+                if (cur.episode > last.episode)
+                    return true;
+            return false;
+        };
 
-        $('select[name="SearchString"]>option').each(function(e) {
-            if ($(this).attr('value') !== "") {
-                var tvshow = {
-                    id: $(this).attr('value'),
-                    name: $(this).html()
-                };
-                showlist.push(tvshow);
+        if (favourites.ready === false || shows.ready === false) {
+            setTimeout(function() { torrents.find(); }, 500);
+        } else {
+            for (var item in favourites.shows) {
+                var show = favourites.shows[item];
+                var latesttorrent = show.latesttorrent;
+                var lasttorrent = show.lasttorrent;
+                var data = shows.getlocal(show.id);
+                for (var i in data.episodes) {
+                    var torrent = data.episodes[i];
+                    var torrentname = torrent.title;
+                    var showname = torrent.show;
+                    var curepisode = {
+                        season: torrent.seasonNumber,
+                        episode: torrent.episodeNumber
+                    };
+                    if (isnewshow(curepisode, lasttorrent)) {
+                        var shownames = Object.keys(torrents.unwatched);
+                        if (shownames.indexOf(showname) === -1) {
+                            torrents.unwatched[showname] = {
+                                torrents: []
+                            };
+                        }
+                        var alreadythere = false;
+                        for (var j in torrents.unwatched[showname].torrents) {
+                            if (torrents.unwatched[showname].torrents[j].season === torrent.seasonNumber && torrents.unwatched[showname].torrents[j].episode === torrent.episodeNumber) {
+                                alreadythere = true;
+                                if (torrentname.indexOf("720p") === -1) {
+                                    torrents.unwatched[showname].torrents[j].magnet = torrent.magnet;
+                                } else {
+                                    torrents.unwatched[showname].torrents[j].magnet720p = torrent.magnet;
+                                }
+                                break;
+                            }
+                        }
+                        if (alreadythere === false) {
+                            var obj = {
+                                season: torrent.seasonNumber,
+                                episode: torrent.episodeNumber,
+                                magnet: "",
+                                magnet720p: ""
+                            };
+                            if (torrentname.indexOf("720p") === -1) {
+                                obj.magnet = torrent.magnet;
+                            } else {
+                                obj.magnet720p = torrent.magnet;
+                            }
+                            torrents.unwatched[showname].torrents.push(obj);
+                        }
+                    } else {
+                        break;
+                    }
+                }
+            }
+            torrents.display();
+        }
+    }
+};
+torrents.find();
+
+var shows = {
+    data: [],
+    ready: false,
+    load: function() {
+        database.shows.get({}, function(data) {
+            shows.data = data;
+            shows.ready = true;
+        });
+    },
+    save: function(show) {
+        show.refreshed = new Date().getTime();
+        database.shows.add(show);
+    },
+    get: function(id, callback) {
+        database.shows.get({ id: id }, function(data) {
+            return callback(data);
+        });
+    },
+    getlocal: function(id) {
+        for (var item in shows.data) {
+            if (id == shows.data[item].id)
+                return shows.data[item];
+        }
+        return {};
+    },
+    update: function() {
+        var getShowEpisodesCallback = function() {
+            return function(err, data) {
+                shows.save(data);
+                console.log("Updated: " + data.title);
+            };
+        };
+
+        database.shows.get({}, function(data) {
+            for (var item in data) {
+                var showID = data[item].id;
+                eztv.getShowEpisodes(showID, getShowEpisodesCallback());
             }
         });
-        /*fs.writeFile('data/showlist.json', JSON.stringify({ shows: showlist }), function(err) {
-            if (err)
-                console.log(err);
-        });*/
-    });
+    }
 };
+shows.load();
+//shows.update();
+
+var showlist = {
+    data: [],
+    ready: false,
+    load: function() {
+        fs.readFile('data/showlist.json', function(err, data) {
+            data=data.toString();
+            if(!err) {
+                showlist.data = JSON.parse(data);
+                showlist.ready = true;    
+            }
+        });
+    },
+    update: function() {
+        internet.makeRequest("https://eztv.ag/showlist/", {}, function(data) {
+            var $ = cheerio.load(data);
+
+            $("table.forum_header_border tr[name=hover]").each(function(i, e) {
+                var show = {};
+
+                show.url = $(e).find("td").eq(0).find("a").attr("href");
+
+                var regex = show.url.match(/\/shows\/(\d+)\/([^\/]+)/);
+                show.id = parseInt(regex[1]);
+                show.slug = regex[2];
+
+                var title = $(e).find("td").eq(0).find("a").html();
+                title = he.decode(title);
+                if (title.length >= 5 && title.indexOf(", The") === title.length - 5) {
+                    title = "The " + title.substr(0, title.length - 5);
+                }
+                show.title = title;
+
+                show.status = $(e).find("td").eq(1).find("font").html();
+
+                showlist.data.push(show);
+            });
+            showlist.data.sort(function(a, b) {
+                if (a.title.toLowerCase() > b.title.toLowerCase())
+                    return 1;
+                else if (a.title.toLowerCase() < b.title.toLowerCase())
+                    return -1;
+                return 0;
+            });
+            showlist.ready = true;
+            fs.writeFile('data/showlist.json', JSON.stringify(showlist.data), function(err) {
+
+            });
+        });
+    }
+};
+//showlist.update();
+showlist.load();
 
 var nukeString = function(str) {
     str = str.replace("The ", "");
@@ -57,119 +211,3 @@ var searchInShowlist = function(name, start, end) {
         }
     }
 };
-
-var loadAvailableTorrents = function() {
-    console.log("Starting load");
-    var source = $("#availabletorrents-template").html();
-    var template = Handlebars.compile(source);
-    var panel1 = {};
-    var panel2 = {};
-
-    /* Not adding all */
-
-    for (var i = 0, cnt = 0; i < Object.keys(availabletorrents).length; i++) {
-        if (availabletorrents[Object.keys(availabletorrents)[i]].torrents.length > 0) {
-            if (cnt % 2 === 0) {
-                panel1[Object.keys(availabletorrents)[i]] = availabletorrents[Object.keys(availabletorrents)[i]];
-            } else {
-                panel2[Object.keys(availabletorrents)[i]] = availabletorrents[Object.keys(availabletorrents)[i]];
-            }
-            cnt++;
-        }
-    }
-    var panel1html = template(panel1);
-    var panel2html = template(panel2);
-    $('.availabletorrents>.panel').eq(0).html(panel1html);
-    $('.availabletorrents>.panel').eq(1).html(panel2html);
-    $('.availabletorrents-show-episodes').slideUp(10);
-};
-
-var findMyShows = function() {
-    console.log("Internet searching for torrents");
-    availabletorrents = {};
-
-    var getAllEpisodesCallback = function(lastepisode) {
-        return function(error, data) {
-            for (var i in data.episodes) {
-                var torrent = data.episodes[i];
-                var torrentname = torrent.title;
-                var show = torrent.show;
-                var shownames = Object.keys(availabletorrents);
-                if (shownames.indexOf(show) === -1) {
-                    availabletorrents[show] = {
-                        torrents: []
-                    };
-                }
-                if (torrent.seasonNumber > lastepisode.season || (torrent.seasonNumber === lastepisode.season && torrent.episodeNumber > lastepisode.episode)) {
-                    var alreadythere = false;
-                    for (var j in availabletorrents[show].torrents) {
-                        if (availabletorrents[show].torrents[j].season === torrent.seasonNumber && availabletorrents[show].torrents[j].episode === torrent.episodeNumber) {
-                            alreadythere = true;
-                            if (torrentname.indexOf("720p") === -1) {
-                                availabletorrents[show].torrents[j].magnet = torrent.magnet;
-                            } else {
-                                availabletorrents[show].torrents[j].magnet720p = torrent.magnet;
-                            }
-                            break;
-                        }
-                    }
-                    if (alreadythere === false) {
-                        var obj = {
-                            season: torrent.seasonNumber,
-                            episode: torrent.episodeNumber,
-                            magnet: "",
-                            magnet720p: ""
-                        };
-                        if (torrentname.indexOf("720p") === -1) {
-                            obj.magnet = torrent.magnet;
-                        } else {
-                            obj.magnet720p = torrent.magnet;
-                        }
-                        availabletorrents[show].torrents.push(obj);
-                    }
-                }
-            }
-            if (Object.keys(myshows).length === Object.keys(availabletorrents).length) {
-                loadAvailableTorrents();
-            }
-        };
-    };
-
-    for (var show in myshows) {
-        var found = -1;
-        if (localStorage[show] !== undefined) {
-            found = localStorage[show];
-        } else {
-            for (var item in showlist.shows) {
-                var d = compareShowNames(show, he.decode(showlist.shows[item].name));
-                if (d) {
-                    found = item;
-                    localStorage[show] = item;
-                    break;
-                }
-            }
-        }
-
-        var allepisodes = [];
-        for (var i in myshows[show].torrents) {
-            var episode = myshows[show].torrents[i].name;
-            var details = getEpisodeDetailsFromName(episode);
-            allepisodes.push(details);
-        }
-        var lastepisode = allepisodes[allepisodes.length - 1];
-
-        if (found !== -1) {
-            var showID = showlist.shows[found].id;
-            eztv.getShowEpisodes(showID, getAllEpisodesCallback(lastepisode));
-        }
-    }
-};
-
-var loadShows = function() {
-    fs.readFile('data/showlist.json', function(err, data) {
-        if (!err) {
-            showlist = JSON.parse(data);
-        }
-    });
-};
-loadShows();

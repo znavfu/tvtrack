@@ -7,11 +7,11 @@
     "cheerio": "^0.20.0",
     "chokidar": "^1.4.3",
     "eztv": "^0.0.10",
-    "jquery": "^2.2.0",
     "font-awesome": "^4.5.0",
     "handlebars": "^4.0.5",
-    "levenshtein": "^1.0.5",
     "jquery": "^2.2.0",
+    "levenshtein": "^1.0.5",
+    "nedb": "^1.7.1",
     "querystring": "^0.2.0",
     "request": "^2.67.0",
     "toastr": "^2.1.2"

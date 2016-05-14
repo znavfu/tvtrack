@@ -7,28 +7,30 @@
 </head>
 
 <body>
-    <div class="sidebar">
-        <i class="fa fa-cloud-download pagelink pagelink-torrents" data-page="availabletorrents"></i>
-        <i class="fa fa-bars pagelink pagelink-list" data-page="locallist"></i>
+    <div class="background"></div>
+    <div class="topbar">
+        <i class="fa fa-download pagelink" data-page="torrents"></i>
+        <i class="fa fa-list pagelink" data-page="local"></i>
+        <i class="fa fa-star pagelink" data-page="favourites"></i>
         <!--i class="fa fa-plus pagelink pagelink-add"></i-->
-        <i class="fa fa-cog pagelink pagelink-settings" data-page="settings"></i>
+        <i class="fa fa-cog pagelink pagelink-settings pushright" data-page="settings"></i>
     </div>
     <div class="pages">
-        <div class="page availabletorrents">
-            <div class="panel">
+        <div class="page favourites">
+            <div class="favouriteshows">
                 
-            </div
-            ><div class="panel">
+            </div>
+            <div class="favouriterecommended">
                 
             </div>
         </div>
-        <div class="page locallist">
-            <div class="panel">
-                
-            </div
-            ><div class="panel">
-                
-            </div>
+        <div class="page torrents">
+            
+        </div>
+        <div class="page local">
+            <div class="showlist"></div>
+            <div class="episodes"></div>
+            <div class="page-options"></div>
         </div>
         <div class="page settings">
             <div class="watchedfolders">
@@ -39,74 +41,14 @@
         </div>
     </div>
     
-    <script id="locallist-template" type="text/x-handlebars-template">
-        {{#each .}}
-        <div class="locallist-show">
-            <div class="locallist-show-title">
-                {{@key}}
-                <span class="fromfolder">
-                    {{torrentfolder}}
-                </span>
-            </div>
-            <div class="locallist-show-episodes">
-                {{#each torrents}}
-                <div class="locallist-show-episode" data-path="{{path}}">
-                    {{name}}
-                </div>
-                {{/each}}
-            </div>
-        </div>
-        {{/each}}
-    </script>
-
-    <script id="availabletorrents-template" type="text/x-handlebars-template">
-        {{#each .}}
-        <div class="availabletorrents-show">
-            <div class="availabletorrents-show-title">
-                {{@key}}
-                <span class="fromfolder">
-                    {{torrents.length}}
-                </span>
-            </div>
-            <div class="availabletorrents-show-episodes">
-                {{#each torrents}}
-                <div class="availabletorrents-show-episode" data-path="{{path}}">
-                    <span>
-                        Season {{season}} Episode {{episode}}
-                    </span>
-                    <a href="{{magnet}}" class="magnet">
-                        <i class="fa fa-magnet"></i>
-                    </a>
-                    <a href="{{magnet720p}}" class="magnet720p">
-                        720p
-                    </a>
-                </div>
-                {{/each}}
-            </div>
-        </div>
-        {{/each}}
-    </script>
-
-    <script id="torrentfolder-template" type="text/x-handlebars-template">
-        {{#each .}}
-        <div class="torrentfolder">
-            <span class="torrentfolder-path" data-path="{{path}}">
-                {{path}}
-            </span>
-            <span>
-                <i class="fa fa-times removetorrentfolder"></i>
-            </span>
-        </div>
-        {{/each}}
-    </script>
-    
     <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="js/database.js"></script>
     <script type="text/javascript" src="js/default.js"></script>
-    <script type="text/javascript" src="js/internet.js"></script>
+    <script type="text/javascript" src="js/template.js"></script>
     <script type="text/javascript" src="js/local.js"></script>
+    <script type="text/javascript" src="js/favourites.js"></script>
+    <script type="text/javascript" src="js/internet.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
-    
     <script>
     var chokidar = require('chokidar');
     var watcher = chokidar.watch('.', {
