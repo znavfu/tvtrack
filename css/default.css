@@ -2,15 +2,18 @@ body {
 	font-family: 'BebasNeue';
 	background-color: #f8fadf;
 }
+
 input {
 	font-family: 'BebasNeue'!important;
 }
+
 .sidebar {
 	position: fixed;
 	left: 0; height: 100%; top: 0; width: 60px;
 	background-color: #00a896;
 	box-shadow: 0 0 10px #999;
 }
+
 .sidebar>.pagelink {
 	width: 60px;
 	text-align: center;
@@ -19,6 +22,7 @@ input {
 	color: #f8fadf;
 	cursor: pointer;
 }
+
 .sidebar>.pagelink:hover {
 	background-color: rgba(0,0,0,0.1);
 }
@@ -36,8 +40,6 @@ input {
 	overflow: hidden;
 }
 
-
-
 .locallist .panel {
 	width: 50%;
 	display: inline-block;
@@ -48,43 +50,50 @@ input {
 	font-size: 20px;
 	color: #222;
 }
+
 .locallist-show-title {
 	padding: 20px 20px 10 20px;
 	font-size: 22px;
 	cursor: pointer;
 	font-weight: 400;
 }
+
 .fromfolder {
 	color: #999;
 	font-size: 16px;
 	vertical-align: middle;
 	margin-left: 10px;
 }
+
 .locallist-show-title:hover {
 	background-color: #fff;
 	background-color: rgba(0,0,0,0.05);
 }
+
 .locallist-show-episodes {
 	font-size: 18px;
 	font-weight: 100;
 	padding: 0 20px 10px 30px;
 }
+
 .locallist-show-episode {
 	padding: 5px;
 	cursor: pointer;
 }
+
 .locallist-show-episode:hover {
 	background-color: #fff;
 	background-color: rgba(0,0,0,0.05);
 }
 
-
 .settings {
 	padding: 50px;
 }
+
 .watchedfolders {
 	font-size: 30px;
 }
+
 .watchedfolders div {
 	margin-bottom: 10px;	
 }
